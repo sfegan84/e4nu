@@ -715,7 +715,7 @@ void genie_analysis::Loop()
 
           TVector3 V3_2prot_uncorr[2];
           V3_2prot_uncorr[0] = V4_prot_uncorr1.Vect();
-          V3_2prot_uncorr[1] = V4_prot_uncorr1.Vect();
+          V3_2prot_uncorr[1] = V4_prot_uncorr2.Vect();
 
           TVector3 V3_2prot_corr[2];
           V3_2prot_corr[0] = V3_prot_corr1;
@@ -3180,7 +3180,7 @@ void genie_analysis::LoopCLAS()
 
           TVector3 V3_2prot_uncorr[2];
           V3_2prot_uncorr[0] = V4_prot_uncorr1.Vect();
-          V3_2prot_uncorr[1] = V4_prot_uncorr1.Vect();
+          V3_2prot_uncorr[1] = V4_prot_uncorr2.Vect();
 
           TVector3 V3_2prot_corr[2];
           V3_2prot_corr[0] = V3_prot_corr1;
