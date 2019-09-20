@@ -3348,10 +3348,10 @@ void genie_analysis::LoopCLAS()
             for (int i = 0; i < num_pi_phot; i++) {
 
               ecstat_pi2[i] = ec_radstat_n[i];
-              if ( index_pipl[i] == ind_pi_phot[i] ) { //i-th pion is a piplus
+              if (ind_pi_phot[i]!= -1 && (index_pipl[i] == ind_pi_phot[i]) ) { //i-th pion is a piplus
                 q_pi2[i] = 1;
               }
-              else if ( index_pimi[i] == ind_pi_phot[i] ) { //i-th pion is a piminus
+              else if (ind_pi_phot[i]!= -1 && (index_pimi[i] == ind_pi_phot[i]) ) { //i-th pion is a piminus
                 q_pi2[i] = -1;
               }
               else if (ind_pi_phot[i]!= -1 && !ec_radstat_n[i] ) { //i-th particle is a neutral
@@ -3858,10 +3858,10 @@ void genie_analysis::LoopCLAS()
         for (int i = 0; i < num_pi_phot; i++) {
 
             radstat_pi2[i] = ec_radstat_n[i];
-            if ( index_pipl[i] == ind_pi_phot[i] ) { //i-th pion is a piplus
+            if ( ind_pi_phot[i]!= -1 && (index_pipl[i] == ind_pi_phot[i]) ) { //i-th pion is a piplus
               q_pi2[i] = 1;
             }
-            else if ( index_pimi[i] == ind_pi_phot[i] ) { //i-th pion is a piminus
+            else if (ind_pi_phot[i]!= -1 && (index_pimi[i] == ind_pi_phot[i]) ) { //i-th pion is a piminus
               q_pi2[i] = -1;
             }
             else if (ind_pi_phot[i]!= -1 && !ec_radstat_n[i] ) { //i-th particle is a neutral
@@ -3910,10 +3910,10 @@ void genie_analysis::LoopCLAS()
         for (int i = 0; i < num_pi_phot; i++) {
 
             radstat_pi3[i] = ec_radstat_n[i];
-            if ( index_pipl[i] == ind_pi_phot[i] ) { //i-th pion is a piplus
+            if ( ind_pi_phot[i]!= -1 && (index_pipl[i] == ind_pi_phot[i]) ) { //i-th pion is a piplus
               q_pi3[i] = 1;
             }
-            else if ( index_pimi[i] == ind_pi_phot[i] ) { //i-th pion is a piminus
+            else if ( ind_pi_phot[i]!= -1 && (index_pimi[i] == ind_pi_phot[i]) ) { //i-th pion is a piminus
               q_pi3[i] = -1;
             }
             else if (ind_pi_phot[i]!= -1 && !ec_radstat_n[i] ) { //i-th particle is a neutral
@@ -3976,10 +3976,10 @@ void genie_analysis::LoopCLAS()
        for (int i = 0; i < num_pi_phot; i++) {
 
            radstat_pi4[i] = ec_radstat_n[i];
-           if ( index_pipl[i] == ind_pi_phot[i] ) { //i-th pion is a piplus
+           if ( ind_pi_phot[i]!= -1 && (index_pipl[i] == ind_pi_phot[i]) ) { //i-th pion is a piplus
              q_pi4[i] = 1;
            }
-           else if ( index_pimi[i] == ind_pi_phot[i] ) { //i-th pion is a piminus
+           else if ( ind_pi_phot[i]!= -1 && (index_pimi[i] == ind_pi_phot[i]) ) { //i-th pion is a piminus
              q_pi4[i] = -1;
            }
            else if (ind_pi_phot[i]!= -1 && !ec_radstat_n[i] ) { //i-th particle is a neutral
@@ -4157,13 +4157,13 @@ void genie_analysis::LoopCLAS()
          double P_1p0pi=0;
          double P_1p1pi[N_2pi]={0};
 
-         for (int i = 0; i < num_pi; i++) {
+         for (int i = 0; i < num_pi_phot; i++) {
 
              radstat_pi2[i] = ec_radstat_n[i];
-             if ( index_pipl[i] == ind_pi_phot[i] ) { //i-th pion is a piplus
+             if (ind_pi_phot[i]!= -1 && (index_pipl[i] == ind_pi_phot[i]) ) { //i-th pion is a piplus
                q_pi2[i] = 1;
              }
-             else if ( index_pimi[i] == ind_pi_phot[i] ) { //i-th pion is a piminus
+             else if (ind_pi_phot[i]!= -1 && (index_pimi[i] == ind_pi_phot[i])) { //i-th pion is a piminus
                q_pi2[i] = -1;
              }
              else if (ind_pi_phot[i]!= -1 && !ec_radstat_n[i] ) { //i-th particle is a neutral
@@ -4239,10 +4239,10 @@ void genie_analysis::LoopCLAS()
          for (int i = 0; i < num_pi; i++) {
 
              radstat_pi3[i] = ec_radstat_n[i];
-             if ( index_pipl[i] == ind_pi_phot[i] ) { //i-th pion is a piplus
+             if (ind_pi_phot[i]!= -1 && (index_pipl[i] == ind_pi_phot[i]) ) { //i-th pion is a piplus
                q_pi3[i] = 1;
              }
-             else if ( index_pimi[i] == ind_pi_phot[i] ) { //i-th pion is a piminus
+             else if ( ind_pi_phot[i]!= -1 && (index_pimi[i] == ind_pi_phot[i]) ) { //i-th pion is a piminus
                q_pi3[i] = -1;
              }
              else if (ind_pi_phot[i]!= -1 && !ec_radstat_n[i] ) { //i-th particle is a neutral
