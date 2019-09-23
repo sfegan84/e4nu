@@ -20,8 +20,15 @@
 #include <TF1.h>
 #include <TGraph.h>
 
+// Loading all the constants from Constant.h (e_mass, m_prot, m_pimi, m_pipl, m_pion, m_neut = 0.939565,
+// H3_bind_en, He4_bind_en, C12_bind_en, B_bind_en, He3_bind_en, D2_bind_en, Fe_bind_en, Mn_bind_en
+
 using namespace std;
-//using namespace Constants;
+
+void SetFiducialCutParameters(std::string beam_en); // Load Fidicual Parameters for 1.1 and 4.4 GeV from file
+//void SetMomCorrParameters();
+
+// Also used by FilterData.{C,h}
 
 TF1 *pipl_deltat_sig,*pipl_deltat_mean,*pimi_deltat_sig,*pimi_deltat_mean, *prot_deltat_sig, *prot_deltat_mean,*el_Epratio_sig,*el_Epratio_mean;
 
@@ -125,8 +132,8 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
   if (fChain == 0) return;
 
   Long64_t nentries = fChain->GetEntriesFast();
-  nentries =8000000;
-  //  nentries =10000;
+  //      nentries =8000000;
+  //     nentries =1000000;
 
   double N_prot1 = 0, N_prot2 = 0,N_prot_both = 0;
   double eps;
@@ -1106,6 +1113,8 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
   h1_E_tot_2p1pi_1p0pi->Sumw2();
   h1_E_rec_2p1pi_1p0pi->Sumw2();
 
+  int CounterEvents = 0;
+
 /** Beginning of Event Loop **/
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
     //for (Long64_t jentry=0; jentry<200000;jentry++) {
@@ -1158,7 +1167,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
       continue;
     }
     if (sc[ind_em] <=0) {
-      //      std::cout << "Possible problem with making electron ec vector. SC index below/equal zero: sc[ind_em] =  " << sc[ind_em] << std::endl;
+/*      std::cout << "Possible problem with making electron ec vector. SC index below/equal zero: sc[ind_em] =  " << sc[ind_em] << std::endl;*/
       continue;
     }
     //Define electron vectors, angles amd other Information
@@ -1446,7 +1455,6 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
       index_p[i] = -1;   index_pi[i] = -1;   index_pipl[i] = -1;   index_pimi[i] = -1;   ind_pi_phot[i] = -1;
     }
 
-
     double pimi_phi, pimi_phi_mod, pimi_theta; //Pi Minus
     double pipl_phi, pipl_phi_mod, pipl_theta; //Pi Plus
     double prot_phi, prot_phi_mod, prot_theta; //Proton
@@ -1466,6 +1474,8 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
     const double phot_e_phidiffcut=30; //electron - photon phi difference cut
     double photon_ece;
     const double EC_sampling_frac = 0.31; //for photons
+
+    CounterEvents ++;
 
    //Loop for Hadrons, electrons have i=0
     for( int i = 1; i < TMath::Min(gpart, 20); i++ )
@@ -1845,7 +1855,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
           V3_q=(V4_beam-V4_el).Vect();
           rotation->prot2_rot_func(V3_2prot_corr, V3_2prot_uncorr, V4_el, E_tot_2p, p_perp_tot_2p, P_N_2p , &N_prot_both);
 
-          if(num_pi ==0 && N_prot_both!=0){
+          if(num_pi_phot==0 && N_prot_both!=0){
             for(int f = 0; f < num_p; f++){    //looping through two protons
 
               h1_E_tot_p_bkgd->Fill(E_tot_2p[f],P_N_2p[f]*1/Mott_cross_sec);
@@ -1890,7 +1900,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
           double Ecal_2p1pi_to2p0pi[N_2prot]={0},p_miss_perp_2p1pi_to2p0pi[N_2prot]={0}, P_2p1pi_to2p0pi[N_2prot]={0},N_2p_det=0;
           double N_pidet=0,N_piundet=0;
 
-          if (num_pi ==1) {
+          if (num_pi_phot==1) {
 
             V3_1pi.SetXYZ(p[ind_pi_phot[0]]*cx[ind_pi_phot[0]],p[ind_pi_phot[0]]*cy[ind_pi_phot[0]],p[ind_pi_phot[0]]*cz[ind_pi_phot[0]]);
 
@@ -1996,7 +2006,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
           double Ecal_2p2pi[N_2prot],p_miss_perp_2p2pi[N_2prot],Ptot_2p[2]={0};
           bool ecstat_pi2[N_2pi]={false};
 
-          if ( num_pi == 2) {
+          if ( num_pi_phot == 2) {
 
             V3_2pi[0].SetXYZ(p[ind_pi_phot[0]]*cx[ind_pi_phot[0]],p[ind_pi_phot[0]]*cy[ind_pi_phot[0]],p[ind_pi_phot[0]]*cz[ind_pi_phot[0]]);
             V3_2pi[1].SetXYZ(p[ind_pi_phot[1]]*cx[ind_pi_phot[1]],p[ind_pi_phot[1]]*cy[ind_pi_phot[1]],p[ind_pi_phot[1]]*cz[ind_pi_phot[1]]);
@@ -2117,7 +2127,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
 
            rotation->prot3_rot_func( V3_prot_corr,V3_prot,V4_el,E_cal_3pto2p,p_miss_perp_3pto2p, P_3pto2p,N_p1, E_cal_3pto1p,p_miss_perp_3pto1p,&N_p_three);
 
-	         if(num_pi ==0 && N_p_three!=0){
+	         if(num_pi_phot==0 && N_p_three!=0){
 	           for(int count = 0; count < N_comb;count++)    { //Loop over number of combinations
                for(int j = 0; j < N_2p; j++)    { //loop over two protons
 
@@ -2189,7 +2199,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
 
 //----------------------------------3p 1pi ----------------------------------------------------------
 
-           if (num_pi ==1) { //number of pions or photons = 1
+           if (num_pi_phot==1) { //number of pions or photons = 1
 
              double P_tot_3p[N_3p]={0};
              double Ecal_3p1pi[N_3p]={0};
@@ -2292,7 +2302,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
 
 	         V3_q=(V4_beam-V4_el).Vect();
 
-           if ( num_pi == 0){ //no pion or photon
+           if ( num_pi_phot == 0){ //no pion or photon
 	            for(int g = 0; g < N_tot; g++){ //this looks like a 4-proton rotation function -> could be placed maybe in an extra function
 
 		              double rot_angle = gRandom->Uniform(0,2*TMath::Pi());
@@ -2531,14 +2541,14 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
 	   V3_q=(V4_beam-V4_el).Vect();
 	   h1_E_rec->Fill(E_rec,1/Mott_cross_sec);
 
-	   if (num_pi==0){
+	   if (num_pi_phot==0){
        h1_E_rec_0pi->Fill(E_rec,1/Mott_cross_sec);
 	     h1_E_rec_0pi_frac_feed->Fill((E_rec-en_beam_Eqe[fbeam_en])/en_beam_Eqe[fbeam_en],1/Mott_cross_sec);
      }
 
 //----------------------------- e- ,1pi  -----------------------------------------
 
-	   if (num_pi==1) {
+	   if (num_pi_phot==1) {
 
 	      V3_pi.SetXYZ(p[ind_pi_phot[0]]*cx[ind_pi_phot[0]],p[ind_pi_phot[0]]*cy[ind_pi_phot[0]],p[ind_pi_phot[0]]*cz[ind_pi_phot[0]]);
 	      rotation->pi1_rot_func(V3_pi,q[ind_pi_phot[0]],ec_radstat_n[0],&P_undet);
@@ -2551,7 +2561,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
 	   }
 //----------------------------- e- ,2pi  -----------------------------------------
 
-     if (num_pi==2) {
+     if (num_pi_phot==2) {
 
 	      const int N_2pi=2;
 	      TVector3 V3_2pi[N_2pi];
@@ -2583,7 +2593,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
 
 //----------------------------- e- ,3pi  -----------------------------------------
 
-     if (num_pi==3) {
+     if (num_pi_phot==3) {
 
         const int N_3pi=3;
         const int N_2pi=2;
@@ -2629,7 +2639,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
      }//end of 3pi requirement
 
 //----------------------------- e- ,4pi  -----------------------------------------
-     if (num_pi==4) {
+     if (num_pi_phot==4) {
 
        const int N_4pi=4;
        TVector3 V3_4pi[N_4pi];
@@ -2718,7 +2728,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
        //Vertex cut was removed here since it is already in the event selection loop F.H 08/13/19
 
  //---------------------------------- 1p 2pi   ----------------------------------------------
-       if (num_pi==2) {
+       if (num_pi_phot==2) {
 
          const int N_2pi=2;
          TVector3 V3_2pi[N_2pi],V3_2pi_rot[N_2pi],V3_p_rot;
@@ -2799,7 +2809,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
        }//1p 2pi statetment ends
 
  //---------------------------------- 1p 3pi   ----------------------------------------------
-       if (num_pi==3) {
+       if (num_pi_phot==3) {
 
          const int N_3pi=3;
          TVector3 V3_3pi[N_3pi],V3_3pi_rot[N_3pi],V3_p_rot;
@@ -2855,7 +2865,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
        }//end of 1p 3pi requirement
 
   //---------------------------------- 1p 1pi   ----------------------------------------------
-       if (num_pi ==1) {
+       if (num_pi_phot==1) {
          double N_piphot_det,N_piphot_undet;
          TVector3 V3_pi_phot;
          V3_q=(V4_beam-V4_el).Vect();
@@ -2903,7 +2913,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
        }//end of 1p 1pi requirement
 
   //---------------------------------- 1p 0pi   ----------------------------------------------
-       if (num_pi ==0){
+       if (num_pi_phot==0){
 
           h2_Erec_pperp_newcut2->Fill(p_perp_tot,E_rec,1/Mott_cross_sec);
 	        h1_E_rec_cut2_new->Fill(E_rec,1/Mott_cross_sec);
@@ -3544,6 +3554,8 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
   gDirectory->Write("hist_Files", TObject::kOverwrite);
   // skim_tree->AutoSave();
 
+
+  std::cout << "CounterEvents = " << CounterEvents << std::endl;
 
   delete[]  pperp_cut;
   delete[] Ecal_lowlim;

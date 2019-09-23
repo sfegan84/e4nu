@@ -3066,9 +3066,10 @@ void genie_analysis::LoopCLAS()
     int ind_pi_phot[20]; //index for pions and photons
     int index_pipl[20]; //index for each pi plus
     int index_pimi[20]; //index for each pi minus
+    bool ec_radstat_n[20];
     //Setting arrays
     for (int i = 0; i<20; i++) {
-      index_p[i] = -1;   index_pi[i] = -1;   index_pipl[i] = -1;   index_pimi[i] = -1;   ind_pi_phot[i] = -1;
+      index_p[i] = -1;   index_pi[i] = -1;   index_pipl[i] = -1;   index_pimi[i] = -1;   ind_pi_phot[i] = -1; ec_radstat_n[i] = false;
     }
     //Number of hadrons
     int num_p = 0;
@@ -3080,7 +3081,6 @@ void genie_analysis::LoopCLAS()
     //Index and number variables for neutral particles
     int ec_index_n[20];
     int ec_num_n = 0;
-    bool ec_radstat_n[20] = {false};
 
     const double phot_rad_cut = 40;
     const double phot_e_phidiffcut=30; //electron - photon phi difference cut
@@ -3137,12 +3137,12 @@ void genie_analysis::LoopCLAS()
        				PhotonID.push_back(i);
               // WARNING: THe following needs to be implemented for simulation data F.H. 24.08.19
               //Cut on Radiation photon via angle with respect to the electron
-              V3_phot_angles.SetXYZ(pxf[index_p[0]],pyf[index_p[0]],pzf[index_p[0]]);
-              double neut_phi_mod = V3_phot_angles.Phi()*TMath::RadToDeg(); + 30; //Add 30 degree
+              V3_phot_angles.SetXYZ(pxf[i],pyf[i],pzf[i]);
+              double neut_phi_mod = V3_phot_angles.Phi()*TMath::RadToDeg() + 30; //Add 30 degree
               if (neut_phi_mod < 0) neut_phi_mod = neut_phi_mod + 360;  //Neutral particle is between 0 and 360 degree
 
               //within 40 degrees in theta and 30 degrees in phi
-              if(V3_phot_angles.Angle(V3_el)*TMath::RadToDeg() < phot_rad_cut && abs(neut_phi_mod-el_phi_mod) < phot_e_phidiffcut ) {
+              if(V3_phot_angles.Angle(V3_el)*TMath::RadToDeg() < phot_rad_cut && fabs(neut_phi_mod-el_phi_mod) < phot_e_phidiffcut ) {
                   ec_radstat_n[num_pi_phot - 1] = true; //select radiation photons
 
               }
@@ -3196,8 +3196,8 @@ void genie_analysis::LoopCLAS()
 
           rotation->prot2_rot_func(V3_2prot_corr, V3_2prot_uncorr, V4_el, E_tot_2p, p_perp_tot_2p, P_N_2p , &N_prot_both);
 
-      //    if(num_pi_phot==0 && N_prot_both!=0){ // no photons for now F.H. 29.8.19
-          if(num_pi == 0 && N_prot_both != 0){
+          if(num_pi_phot==0 && N_prot_both!=0){ // no photons for now F.H. 29.8.19
+	  //          if(num_pi == 0 && N_prot_both != 0){
             double histoweight = 1./Mott_cross_sec; //total weight from 2p acceptance , 1e acceptance, Mott, and GENIE weight
 
             for(int f = 0; f < num_p; f++){    //looping through two protons
@@ -3249,7 +3249,7 @@ void genie_analysis::LoopCLAS()
             }
             //skip radiation photon
             else if (num_pipl == 0 && num_pimi == 0 && ec_radstat_n[0] ) {
-              continue;
+	      charge = 0;
             }
             else {
               std::cout << "2 proton 1 pi loop Problem with Pion count and identification. Num Pi = " << num_pi << " , Num PiPlus = " << num_pipl << " , Num PiMinus = " << num_pimi << std::endl;
@@ -3358,7 +3358,7 @@ void genie_analysis::LoopCLAS()
                 q_pi2[i] = 0;
               }
               else if (ind_pi_phot[i]!= -1 && ec_radstat_n[i] ) { //i-th particle is a radiation photon
-                continue;
+		q_pi2[i] = 0;
               }
               else {  std::cout << "WARNING: 2p 2pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
@@ -3366,7 +3366,6 @@ void genie_analysis::LoopCLAS()
 
 
             }
-
 
             rotation->prot2_pi2_rot_func(V3_2prot_corr,V3_2prot_uncorr,V3_2pi_corr,q_pi2,ecstat_pi2 ,V4_el, Ecal_2p2pi,p_miss_perp_2p2pi,Ptot_2p);
 
@@ -3522,12 +3521,11 @@ void genie_analysis::LoopCLAS()
              }
              //skip radiation photon
              else if (num_pipl == 0 && num_pimi == 0 && ec_radstat_n[0] ) {
-               continue;
+	       charge = 0;
              }
              else {  std::cout << "WARNING: 3p 1pion event: No charge for one pion/photon could be assigned. Pion number " << ind_pi_phot[0] << std::endl; continue; }
 
              V3_pi_corr.SetXYZ(pxf[ind_pi_phot[0]],pyf[ind_pi_phot[0]],pzf[ind_pi_phot[0]]);
-
 
              rotation->prot3_pi1_rot_func(V3_prot_corr,V3_prot_uncorr, V3_pi_corr, charge ,ec_radstat_n[0], V4_el,  Ecal_3p1pi,p_miss_perp_3p1pi, P_tot_3p);
 
@@ -3827,7 +3825,7 @@ void genie_analysis::LoopCLAS()
         }
         //skip radiation photon
         else if (num_pipl == 0 && num_pimi == 0 && ec_radstat_n[0] ) {
-          continue;
+	  charge = 0;
         }
         else {  std::cout << "WARNING: 1pion events: No charge for one pion/photon could be assigned.  "  << std::endl; continue; }
 
@@ -3868,7 +3866,7 @@ void genie_analysis::LoopCLAS()
               q_pi2[i] = 0;
             }
             else if (ind_pi_phot[i]!= -1 && ec_radstat_n[i] ) { //i-th particle is a radiation photon
-              continue;
+	      q_pi2[i] = 0;
             }
             else {  std::cout << "WARNING: 2pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
@@ -3920,7 +3918,7 @@ void genie_analysis::LoopCLAS()
               q_pi3[i] = 0;
             }
             else if (ind_pi_phot[i]!= -1 && ec_radstat_n[i] ) { //i-th particle is a radiation photon
-              continue;
+	      q_pi3[i] = 0;
             }
             else {  std::cout << "WARNING: 3pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
@@ -3986,7 +3984,7 @@ void genie_analysis::LoopCLAS()
              q_pi4[i] = 0;
            }
            else if (ind_pi_phot[i]!= -1 && ec_radstat_n[i] ) { //i-th particle is a radiation photon
-             continue;
+	     q_pi4[i] = 0;
            }
            else {  std::cout << "WARNING: 4pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
@@ -4106,7 +4104,7 @@ void genie_analysis::LoopCLAS()
           }
           //skip radiation photon
           else if (num_pipl == 0 && num_pimi == 0 && ec_radstat_n[0] ) {
-            continue;
+	    charge = 0;
           }
           else {  std::cout << "WARNING: 1pion events: No charge for one pion/photon could be assigned.  "  << std::endl; continue; }
 
@@ -4170,7 +4168,7 @@ void genie_analysis::LoopCLAS()
                q_pi2[i] = 0;
              }
              else if (ind_pi_phot[i]!= -1 && ec_radstat_n[i] ) { //i-th particle is a radiation photon
-               continue;
+	       q_pi2[i] = 0;
              }
              else {  std::cout << "WARNING: 1p 2pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
@@ -4236,7 +4234,8 @@ void genie_analysis::LoopCLAS()
          bool radstat_pi3[N_3pi]={false};
          double P_1p3pi = 0;
 
-         for (int i = 0; i < num_pi; i++) {
+	 //         for (int i = 0; i < num_pi; i++) {
+         for (int i = 0; i < num_pi_phot; i++) {
 
              radstat_pi3[i] = ec_radstat_n[i];
              if (ind_pi_phot[i]!= -1 && (index_pipl[i] == ind_pi_phot[i]) ) { //i-th pion is a piplus
@@ -4249,7 +4248,7 @@ void genie_analysis::LoopCLAS()
                q_pi3[i] = 0;
              }
              else if (ind_pi_phot[i]!= -1 && ec_radstat_n[i] ) { //i-th particle is a radiation photon
-               continue;
+	       q_pi3[i] = 0;
              }
              else {  std::cout << "WARNING: 1p 3pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
