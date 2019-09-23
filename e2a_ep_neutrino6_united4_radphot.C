@@ -1108,6 +1108,7 @@ void e2a_ep_neutrino6_united4_radphot::Loop()
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
     //for (Long64_t jentry=0; jentry<200000;jentry++) {
     Long64_t ientry = LoadTree(jentry);
+    int nb = GetEntry(jentry);
     if (ientry < 0) break;
 
     if( jentry%200000 == 0 )
