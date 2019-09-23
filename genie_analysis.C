@@ -3257,7 +3257,7 @@ void genie_analysis::LoopCLAS()
             }
 
             TVector3 V3_1pi_corr;
-            V3_1pi_corr.SetXYZ(pxf[index_pi[0]],pyf[index_pi[0]],pzf[index_pi[0]]);
+            V3_1pi_corr.SetXYZ(pxf[ind_pi_phot[0]],pyf[ind_pi_phot[0]],pzf[ind_pi_phot[0]]);
 
             double P_2p1pito2p0pi[2] = {0};
             double P_2p1pito1p1pi[2] = {0};
@@ -3362,7 +3362,7 @@ void genie_analysis::LoopCLAS()
               }
               else {  std::cout << "WARNING: 2p 2pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
-              V3_2pi_corr[i].SetXYZ(pxf[index_pi[i]],pyf[index_pi[i]],pzf[index_pi[i]]);
+              V3_2pi_corr[i].SetXYZ(pxf[ind_pi_phot[i]],pyf[ind_pi_phot[i]],pzf[ind_pi_phot[i]]);
 
 
             }
@@ -3524,9 +3524,9 @@ void genie_analysis::LoopCLAS()
              else if (num_pipl == 0 && num_pimi == 0 && ec_radstat_n[0] ) {
                continue;
              }
-             else {  std::cout << "WARNING: 3p 1pion event: No charge for one pion/photon could be assigned. Pion number " << index_pi[0] << std::endl; continue; }
+             else {  std::cout << "WARNING: 3p 1pion event: No charge for one pion/photon could be assigned. Pion number " << ind_pi_phot[0] << std::endl; continue; }
 
-             V3_pi_corr.SetXYZ(pxf[index_pi[0]],pyf[index_pi[0]],pzf[index_pi[0]]);
+             V3_pi_corr.SetXYZ(pxf[ind_pi_phot[0]],pyf[ind_pi_phot[0]],pzf[ind_pi_phot[0]]);
 
 
              rotation->prot3_pi1_rot_func(V3_prot_corr,V3_prot_uncorr, V3_pi_corr, charge ,ec_radstat_n[0], V4_el,  Ecal_3p1pi,p_miss_perp_3p1pi, P_tot_3p);
@@ -3831,7 +3831,7 @@ void genie_analysis::LoopCLAS()
         }
         else {  std::cout << "WARNING: 1pion events: No charge for one pion/photon could be assigned.  "  << std::endl; continue; }
 
-        V3_pi_corr.SetXYZ(pxf[index_pi[0]], pyf[index_pi[0]], pzf[index_pi[0]]);
+        V3_pi_corr.SetXYZ(pxf[ind_pi_phot[0]], pyf[ind_pi_phot[0]], pzf[ind_pi_phot[0]]);
 
         rotation->pi1_rot_func(V3_pi_corr, charge, ec_radstat_n[0], &P_undet);
 
@@ -3872,7 +3872,7 @@ void genie_analysis::LoopCLAS()
             }
             else {  std::cout << "WARNING: 2pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
-            V3_2pi_corr[i].SetXYZ( pxf[index_pi[i]], pyf[index_pi[i]], pzf[index_pi[i]]);
+            V3_2pi_corr[i].SetXYZ( pxf[ind_pi_phot[i]], pyf[ind_pi_phot[i]], pzf[ind_pi_phot[i]]);
 
         }
 
@@ -3924,7 +3924,7 @@ void genie_analysis::LoopCLAS()
             }
             else {  std::cout << "WARNING: 3pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
-            V3_3pi_corr[i].SetXYZ( pxf[index_pi[i]], pyf[index_pi[i]], pzf[index_pi[i]]);
+            V3_3pi_corr[i].SetXYZ( pxf[ind_pi_phot[i]], pyf[ind_pi_phot[i]], pzf[ind_pi_phot[i]]);
 
         }
 
@@ -3991,7 +3991,7 @@ void genie_analysis::LoopCLAS()
            else {  std::cout << "WARNING: 4pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
 
-           V3_4pi_corr[i].SetXYZ( pxf[index_pi[i]], pyf[index_pi[i]], pzf[index_pi[i]]);
+           V3_4pi_corr[i].SetXYZ( pxf[ind_pi_phot[i]], pyf[ind_pi_phot[i]], pzf[ind_pi_phot[i]]);
 
 
        }
@@ -4110,7 +4110,7 @@ void genie_analysis::LoopCLAS()
           }
           else {  std::cout << "WARNING: 1pion events: No charge for one pion/photon could be assigned.  "  << std::endl; continue; }
 
-          V3_pi_corr.SetXYZ(pxf[index_pi[0]], pyf[index_pi[0]], pzf[index_pi[0]]);
+          V3_pi_corr.SetXYZ(pxf[ind_pi_phot[0]], pyf[ind_pi_phot[0]], pzf[ind_pi_phot[0]]);
 
           rotation->prot1_pi1_rot_func(V3_prot_uncorr,V3_pi_corr, charge, ec_radstat_n[0], &N_piphot_det,&N_piphot_undet);
 
@@ -4174,7 +4174,7 @@ void genie_analysis::LoopCLAS()
              }
              else {  std::cout << "WARNING: 1p 2pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
-             V3_2pi_corr[i].SetXYZ( pxf[index_pi[i]], pyf[index_pi[i]], pzf[index_pi[i]]);
+             V3_2pi_corr[i].SetXYZ( pxf[ind_pi_phot[i]], pyf[ind_pi_phot[i]], pzf[ind_pi_phot[i]]);
 
          }
 
@@ -4253,7 +4253,7 @@ void genie_analysis::LoopCLAS()
              }
              else {  std::cout << "WARNING: 1p 3pion event: No charge for one pion/photon could be assigned. Pion number " << i << std::endl; continue; }
 
-             V3_3pi_corr[i].SetXYZ(pxf[index_pi[i]], pyf[index_pi[i]], pzf[index_pi[i]]);
+             V3_3pi_corr[i].SetXYZ(pxf[ind_pi_phot[i]], pyf[ind_pi_phot[i]], pzf[ind_pi_phot[i]]);
 
          }
 
