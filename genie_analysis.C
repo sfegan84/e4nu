@@ -22,7 +22,7 @@
 #include <TGraph.h>
 
 using namespace std;
-using namespace Constants;
+//using namespace Constants;
 
 void genie_analysis::Loop()
 {
