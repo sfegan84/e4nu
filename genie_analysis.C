@@ -3183,6 +3183,7 @@ void genie_analysis::LoopCLAS()
     int num_pi_phot_nonrad=0; //counting all pions and non-radiation photons
     //Index and number variables for neutral particles
     int ec_num_n = 0;
+    int num_rad_phot = 0;
 
     const double phot_rad_cut = 40;
     const double phot_e_phidiffcut=30; //electron - photon phi difference cut
@@ -3246,7 +3247,7 @@ void genie_analysis::LoopCLAS()
               //within 40 degrees in theta and 30 degrees in phi
               if(V3_phot_angles.Angle(V3_el)*TMath::RadToDeg() < phot_rad_cut && fabs(neut_phi_mod-el_phi_mod) < phot_e_phidiffcut ) {
                   ec_radstat_n[num_pi_phot - 1] = true; //select radiation photons
-
+                  num_rad_phot++;
               }
               if(!ec_radstat_n[num_pi_phot - 1])
               {
@@ -3255,11 +3256,13 @@ void genie_analysis::LoopCLAS()
 
           //      num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
               }
-              else{num_pi_phot = num_pi_phot - 1; }
+              else{   num_pi_phot = num_pi_phot - 1; }
        }
 
     } //end of hadron loop
 
+
+    if (num_rad_phot>0) { continue;}
 //std::cout << "num_p = " << num_p << "  num_pi = " << num_pi << "  num_pipl = " << num_pipl << "  num_pimi = " << num_pimi << std::endl;
 
     //Filling Histograms with multiplicities
