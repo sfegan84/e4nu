@@ -3233,9 +3233,9 @@ void genie_analysis::LoopCLAS()
        if (pdgf[i] == 22) { // && pf[i] > 0.3) {
 
               ec_num_n = ec_num_n + 1;
-            //  num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
+              num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
               num_pi_phot = num_pi_phot + 1;
-              ind_pi_phot[num_pi_phot - 1] = i;  //no events with photons for now F.H. 28.08.19
+            //  ind_pi_phot[num_pi_phot - 1] = i;  //no events with photons for now F.H. 28.08.19
        				PhotonID.push_back(i);
               // WARNING: THe following needs to be implemented for simulation data F.H. 24.08.19
               //Cut on Radiation photon via angle with respect to the electron
@@ -3250,10 +3250,12 @@ void genie_analysis::LoopCLAS()
               }
               if(!ec_radstat_n[num_pi_phot - 1])
               {
-                //num_pi_phot = num_pi_phot + 1;
-                //ind_pi_phot[num_pi_phot - 1] = i;
-                num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
+                ind_pi_phot[num_pi_phot - 1] = i;
+              //  num_pi_phot = num_pi_phot + 1;
+
+          //      num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
               }
+              else{num_pi_phot = num_pi_phot - 1; }
        }
 
     } //end of hadron loop
